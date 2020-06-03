@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+    <div id="app">
+        <div class="todos">
+            <div class="title">
+                <h1>待办事项</h1>
+                <input type="text" v-focus
+                placeholder="What needs to be done?"
+                v-model="message"
+                @keyup.13="handkey"
+                >
+                <input type="checkbox" v-show="messages.length !=0">
+            </div>
+            <div class="content" v-for="item,index in messages">
+               <input type="checkbox">
+               <section class="content-item">{{item.title}}</section>
+               <div class="content-del" @click="del(index)"></div>
+            </div>
+            <input type="text" class="content-text" style="display: none;">
+            <div class="footer">
+                <div class="left">剩下1项</div>
+                <div class="center">
+                    <div class="center-item">All</div>
+                    <div class="center-item">激活</div>
+                    <div class="center-item">完成</div>
+                </div>
+                <div class="right">清除已完成</div>
+            </div>
+        </div>
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+        //自定义指令  聚焦
+        Vue.directive("focus",{
+            insterted:function(el,binding,vode){
+                el.focus()
+            }
+        })
+        let vm = new Vue({
+            el:"#app",
+            data:{
+                message:"",
+                messages:[],
+                length:1
+            },
+            methods: {
+                //监听input
+                handkey:function(){
+                    if(!this.message.trim()){
+                        alert("请输入非空字符")
+                        return
+                    }
+                    this.messages.push({
+                        id:length++,
+                        title:this.message,
+                        complete:false
+                    })
+                    // let todos = this.messages.push(this.message)
+                    localStorage.setItem("stroage",JSON.stringify(this.messages))
+                    this.message=""
+                    console.log(this.messages)
+                },
+                del:function(index){
+                    // console.log(this.messages)
+                    this.messages.splice(index,1)
+                }
+            },
+            computed: {
+                
+            },
+        })
+    </script>
+</body>
+</html>
